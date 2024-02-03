@@ -60,6 +60,24 @@ class DatasetProcessor:
                                     resize_with_pad=self.resize_with_pad)
     return preprocess_image, label
 
+  def load_image(self, file_name, label):
+    label = tf.one_hot(label, self.num_classes)
+    dir_images = FLAGS.images_path_ssd
+    if FLAGS.model_type == 'siamese':
+      image_x = tf.io.read_file(dir_images + file_name[0])
+      image_y = tf.io.read_file(dir_images + file_name[1])
+      image_x = tf.io.decode_jpeg(image_x, channels=3)
+      image_y = tf.io.decode_jpeg(image_y, channels=3)
+      return (image_x, image_y), label
+    
+    else:
+      image = tf.io.read_file(dir_images + file_name)
+      image = tf.io.decode_jpeg(image, channels=3)
+      return image, label
+      
+  def load_only_label(self, file_name, label):
+      return file_name, tf.one_hot(label, self.num_classes)
+    
   def make_source_dataset(self):
     csv_data = self.get_dataframe()
     num_instances = len(csv_data)
@@ -69,28 +87,10 @@ class DatasetProcessor:
       dataset = dataset.shuffle(num_instances, seed=self.seed)
       dataset = dataset.repeat()
 
-    def _load_image(file_name, label):
-      label = tf.one_hot(label, self.num_classes)
-      dir_images = FLAGS.images_path_ssd
-      if FLAGS.model_type == 'siamese':
-        image_x = tf.io.read_file(dir_images + file_name[0])
-        image_y = tf.io.read_file(dir_images + file_name[1])
-        image_x = tf.io.decode_jpeg(image_x, channels=3)
-        image_y = tf.io.decode_jpeg(image_y, channels=3)
-        return (image_x, image_y), label
-      
-      else:
-        image = tf.io.read_file(dir_images + file_name)
-        image = tf.io.decode_jpeg(image, channels=3)
-        return image, label
-        
-    def _load_only_label(file_name, label):
-        return file_name, tf.one_hot(label, self.num_classes)
-
     if self.only_label:
-      dataset = dataset.map(_load_only_label, num_parallel_calls=AUTOTUNE)
+      dataset = dataset.map(self._load_only_label, num_parallel_calls=AUTOTUNE)
     else:
-      dataset = dataset.map(_load_image, num_parallel_calls=AUTOTUNE)
+      dataset = dataset.map(self.load_image, num_parallel_calls=AUTOTUNE)
       dataset = dataset.map(self._preprocess_image, num_parallel_calls=AUTOTUNE)
           
     dataset = dataset.prefetch(buffer_size=AUTOTUNE)

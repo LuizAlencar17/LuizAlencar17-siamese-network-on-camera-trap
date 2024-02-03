@@ -13,13 +13,13 @@ def get_model(input_shape, num_classes, seed):
     include_top=False,
     weights='imagenet'
   )
-  if FLAGS.tag == '(tag:no_serengeti_weights)':
+  if FLAGS.tag == '(tag_no_serengeti_weights)':
     base_model.trainable = True
   else:
     base_model.trainable = False
   base_model = base_model(i)
-  x = tf.keras.layers.GlobalAveragePooling2D()(base_model)
-  x = tf.keras.layers.Dense(128, kernel_initializer=tf.keras.initializers.glorot_uniform(seed=seed))(x)
+  x = tf.keras.layers.GlobalAveragePooling2D(name="grad-cam")(base_model)
+  x = tf.keras.layers.Dense(128, name="final", kernel_initializer=tf.keras.initializers.glorot_uniform(seed=seed))(x)
   x = tf.keras.layers.Dense(num_classes, activation="sigmoid", kernel_initializer=tf.keras.initializers.glorot_uniform(seed=seed))(x)
   model = tf.keras.models.Model(
     inputs=[i],

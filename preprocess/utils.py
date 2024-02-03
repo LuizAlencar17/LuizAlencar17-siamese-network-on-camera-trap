@@ -14,7 +14,7 @@ def get_model_path():
     return path
 
 def get_model_serengeti():
-    return f'{FLAGS.checkpoint_path}{FLAGS.model_name}_serengeti_(tag:no_serengeti_weights)_{FLAGS.image_size}/'
+    return f'{FLAGS.checkpoint_path}{FLAGS.model_name}_serengeti_(tag_no_serengeti_weights)_{FLAGS.image_size}/'
 
 def get_model_path_test_results():
     return f'test_{FLAGS.model_name}_{FLAGS.dataset_name}_{FLAGS.tag}_{FLAGS.image_size}'

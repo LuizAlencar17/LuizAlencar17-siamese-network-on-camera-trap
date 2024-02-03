@@ -32,12 +32,12 @@ def get_embedding_network(input_shape, seed):
     include_top=False,
     weights='imagenet'
   )
-  if FLAGS.tag == '(tag:no_serengeti_weights)':
+  if FLAGS.tag == '(tag_no_serengeti_weights)':
     base_model.trainable = True
   else:
     base_model.trainable = False
-  x = tf.keras.layers.GlobalAveragePooling2D()(base_model.output)
-  x = keras.layers.Dense(128, kernel_initializer=tf.keras.initializers.glorot_uniform(seed=seed))(x)
+  x = tf.keras.layers.GlobalAveragePooling2D(name="grad-cam")(base_model.output)
+  x = keras.layers.Dense(128, name="final", kernel_initializer=tf.keras.initializers.glorot_uniform(seed=seed))(x)
   return tf.keras.models.Model(
     inputs=[base_model.input],
     outputs=[x]
@@ -45,8 +45,8 @@ def get_embedding_network(input_shape, seed):
 
 
 def get_model(input_shape, num_classes, seed):
-  input_1 = keras.layers.Input(input_shape)
-  input_2 = keras.layers.Input(input_shape)
+  input_1 = keras.layers.Input(input_shape, name="input-left")
+  input_2 = keras.layers.Input(input_shape, name="input-right")
   embedding_network = get_embedding_network(input_shape, seed)
   tower_1 = embedding_network(input_1)
   tower_2 = embedding_network(input_2)

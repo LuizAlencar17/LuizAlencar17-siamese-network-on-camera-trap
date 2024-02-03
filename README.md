@@ -7,13 +7,13 @@ This repository is the implementation of the article "A Context-Aware Approach f
 to run the pipeline for training or testing the models just use the following command:
 
 ```bash
-python3 train.py --flagfile=configs/mobilenetv2_caltech_\(tag:no_serengeti_weights\)_256_siamese.config
+python3 train.py --flagfile=configs/mobilenetv2_caltech_\(tag_no_serengeti_weights\)_256_siamese.config
 ```
 
 or
 
 ```bash
-python3 test.py --flagfile=configs/mobilenetv2_caltech_\(tag:no_serengeti_weights\)_256_siamese.config
+python3 test.py --flagfile=configs/mobilenetv2_caltech_\(tag_no_serengeti_weights\)_256_siamese.config
 ```
 
 note that there are settings to use with the serengeti database weights or without these weights. You can identify these settings through the filenames with "no_serengeti_weights" or "serengeti_weights".

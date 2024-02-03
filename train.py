@@ -77,7 +77,7 @@ def main(_):
   
   model = process_model(FLAGS.model_name, input_shape, num_classes, FLAGS.seed)
 
-  if FLAGS.tag != '(tag:no_serengeti_weights)':
+  if FLAGS.tag != '(tag_no_serengeti_weights)':
     weights_path = get_model_serengeti()
     print('loading weights from:', weights_path)
     model.load_weights(weights_path)

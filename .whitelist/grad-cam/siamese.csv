@@ -1,2 +1,4 @@
 file_name_x,file_name_y,category,location
-images/animal_01.JPG,images/empty_01.JPG,1,46
+images/caltech_animal.jpg,images/caltech_empty.jpg,1,46
+images/wcs_animal.jpg,images/wcs_empty.jpg,1,46
+images/serengeti_animal.jpg,images/serengeti_empty.jpg,1,46
